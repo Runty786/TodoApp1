@@ -1,0 +1,83 @@
+import { collection, getDocs } from "firebase/firestore"; // Import necessary functions
+import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import { FormControl, InputLabel, Input } from "@mui/material";
+
+import { db } from "../src/Firebase";
+import { List, ListItem, ListItemText } from "@mui/material";
+function App() {
+  const [todos, setTodos] = useState(["abc", "bca"]);
+  const [input, setInput] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productCollection = collection(db, "todo");
+        const snapshot = await getDocs(productCollection);
+        const productsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productsData);
+      } catch (error) {
+        console.error("Error getting products: ", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const addTodos = (event) => {
+    console.log("i am working");
+    event.preventDefault(); //will stop the refresh
+    // db.collection('todo').add({
+    //   todos: input
+    // });
+    setTodos([...todos, input]);
+    setInput(""); //clear inut feild after click on button
+  };
+  return (
+    <>
+      <div className="" style={{ textAlign: "center" }}>
+        <h1>Hello TODO APP</h1>
+        <form action="">
+          <FormControl>
+            <InputLabel htmlFor="my-input">Write a Todo</InputLabel>
+            <Input
+              id="my-input"
+              type="text "
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+          </FormControl>
+          <Button
+            disabled={!input}
+            type="submit"
+            onClick={addTodos}
+            variant="contained"
+          >
+            Add Todo
+          </Button>
+        </form>
+        <ul>
+          {products.map((todo, index) => (
+            <div key={index}>
+              <List>
+                <ListItem>
+                  <ListItemText>
+                    {todo.name}
+                    {todo.age}
+                    {todo.city}
+                  </ListItemText>
+                </ListItem>
+              </List>
+            </div>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+export default App;

@@ -1,12 +1,12 @@
-import React from "react";
-import Card from "./Components/Card";
-function App() {
+import React from 'react'
+import Todo from './Todos'
+
+const App = () => {
   return (
-    <>
-      <h1>App</h1>
-      <Card />
-    </>
-  );
+   <>
+   <Todo/>
+   </>
+  )
 }
 
-export default App;
+export default App
